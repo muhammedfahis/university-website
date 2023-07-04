@@ -772,13 +772,24 @@
     <script>
         async function getChat(message) {
             let answer;
-            const url =
-                'https://uol-languageservice.cognitiveservices.azure.com/language/:query-knowledgebases?projectName=uolbot-kbproject&api-version=2021-10-01&deploymentName=test';
+            const url = 'https://uol-languageservice.cognitiveservices.azure.com/language/:query-knowledgebases';
             const subscriptionKey = '4e5fc2ad93084059a198f392e60fcdf6';
+            const projectName = 'uolbot-kbproject';
+            const apiVersion = '2021-10-01';
+            const deploymentName = 'test';
+
             const data = {
-                question: message
+            top: 3,
+            question: message,
+            includeUnstructuredSources: true,
+            confidenceScoreThreshold: '0.5',
+            answerSpanRequest: {
+                enable: true,
+                topAnswersWithSpan: 1,
+                confidenceScoreThreshold: '1'
+            },
             };
-            return await requestFunction(url, data, subscriptionKey)
+            return await requestFunction(url, data, subscriptionKey,projectName,apiVersion,deploymentName)
         }
         const chatboxElement = document.querySelector('.chat-body');
         const userInputElement = document.querySelector('.chat-input');
@@ -802,15 +813,15 @@
             chatboxElement.scrollTop = chatboxElement.scrollHeight;
         }
 
-        function requestFunction(url, data, subscriptionKey) {
-            axios.post(url, data, {
+        function requestFunction(url, data, subscriptionKey,projectName,apiVersion,deploymentName) {
+            axios.post(`${url}?projectName=${projectName}&api-version=${apiVersion}&deploymentName=${deploymentName}`, data, {
                     headers: {
                         'Content-Type': 'application/json',
                         'Ocp-Apim-Subscription-Key': subscriptionKey
                     }
                 })
                 .then(response => {
-                    console.log(response.data.answers[0].answer);
+                    console.log(response.data.answers);
                     let answer = response.data.answers[0].answer;
                     addMessage(answer, 'bot-message');
                 })
