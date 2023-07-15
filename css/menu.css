@@ -474,7 +474,7 @@ a.dropdown-toggle.icon-search {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 300px;
+  width: 32%;
   height: 400px;
   background-color: #f1f1f1;
   border: 1px solid #ccc;
@@ -554,4 +554,21 @@ a.dropdown-toggle.icon-search {
   background-color: antiquewhite;
     padding: 6px;
     margin: 1%;
+}
+
+body {
+  background-image: url("https://images.shiksha.com/mediadata/images/1535086083phpnFGvGd.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.body-h2 {
+  text-align: center;
+  margin-top: 10%;
+  font-weight: 800;
+  font-size: 40px;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  color: #333333;
+  margin: 35px;
+  padding: 0;
 }
