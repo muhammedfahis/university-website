@@ -762,6 +762,10 @@
         </div>
         <div class="chat-footer">
             <input class="chat-input" type="text" placeholder="Type your message" />
+           <div class="img-div">
+            <img src="./img/icons8-send-message-90.png" id="send-icon" style="height:20px" alt="">
+           </div>
+            <button  style="margin-left: 1%;" id="voice-search-button"><img style="height:10px" src="./img/mic.png" alt=""></button>
         </div>
     </div>
 
@@ -771,37 +775,163 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         async function getChat(message) {
-            let answer;
-            const url = 'https://uol-languageservice.cognitiveservices.azure.com/language/:query-knowledgebases';
-            const subscriptionKey = '4e5fc2ad93084059a198f392e60fcdf6';
-            const projectName = 'uolbot-kbproject';
-            const apiVersion = '2021-10-01';
-            const deploymentName = 'test';
+            try {
+                let answer;
+                const url =
+                'https://uol-languageservice.cognitiveservices.azure.com/language/:query-knowledgebases';
+                const subscriptionKey = '4e5fc2ad93084059a198f392e60fcdf6';
+                const projectName = 'uolbot-kbproject';
+                const apiVersion = '2021-10-01';
+                const deploymentName = 'test';
+
+                const data = {
+                    top: 3,
+                    question: message,
+                    includeUnstructuredSources: true,
+                    confidenceScoreThreshold: '0.5',
+                    answerSpanRequest: {
+                        enable: true,
+                        topAnswersWithSpan: 1,
+                        confidenceScoreThreshold: '1'
+                    },
+                };
+                return await requestFunction(url, data, subscriptionKey, projectName, apiVersion, deploymentName)
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        async function getIntents(query) {
+            const url =
+                'https://clu-test2.cognitiveservices.azure.com/language/:analyze-conversations?api-version=2022-10-01-preview';
+            const subscriptionKey = 'dcec911952344d99aa852918c3de2853';
+            const requestId = '4ffcac1c-b2fc-48ba-bd6d-b69d9942995a';
+
+            const headers = {
+                'Ocp-Apim-Subscription-Key': subscriptionKey,
+                'Apim-Request-Id': requestId,
+                'Content-Type': 'application/json'
+            };
 
             const data = {
-            top: 3,
-            question: message,
-            includeUnstructuredSources: true,
-            confidenceScoreThreshold: '0.5',
-            answerSpanRequest: {
-                enable: true,
-                topAnswersWithSpan: 1,
-                confidenceScoreThreshold: '1'
-            },
+                kind: 'Conversation',
+                analysisInput: {
+                    conversationItem: {
+                        id: 'PARTICIPANT_ID_HERE',
+                        text: query,
+                        modality: 'text',
+                        language: 'en',
+                        participantId: 'PARTICIPANT_ID_HERE'
+                    }
+                },
+                parameters: {
+                    projectName: 'DarulHudaIslamicUniversity',
+                    verbose: true,
+                    deploymentName: 'darulhuda-model',
+                    stringIndexType: 'TextElement_V8'
+                }
             };
-            return await requestFunction(url, data, subscriptionKey,projectName,apiVersion,deploymentName)
+            return new Promise((resolve, reject) => {
+                axios.post(url, data, {
+                        headers
+                    })
+                    .then(response => {
+                        let intent = response.data.result.prediction.intents[0].category;
+                        resolve(intent)
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        reject(error)
+                    });
+            })
         }
+        // async function getVoiceToTextAzure(query,auth) {
+        //     const url =
+        //         'https://eastus.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=en-US';
+        //     const subscriptionKey = '73ec4fd4cf024045b370ee39f72169d8';
+            
+
+        //     const headers = {
+        //         'Ocp-Apim-Subscription-Key': subscriptionKey,
+        //         'Content-Type': 'audio/wav'
+        //     };
+
+        //     return new Promise((resolve, reject) => {
+        //         axios.post(url, data, {
+        //                 headers
+        //             })
+        //             .then(response => {
+        //                 let intent = response.data.result.prediction.intents[0].category;
+        //                 resolve(intent)
+        //             })
+        //             .catch(error => {
+        //                 console.error(error);
+        //                 reject(error)
+        //             });
+        //     })
+        // }
+        // async function getNewSpeechToken(query,auth) {
+        //     const url =
+        //         'https://eastus.api.cognitive.microsoft.com/sts/v1.0/issuetoken';
+        //     const subscriptionKey = '73ec4fd4cf024045b370ee39f72169d8';
+            
+
+        //     const headers = {
+        //         'Ocp-Apim-Subscription-Key': subscriptionKey,
+        //         'Content-Type': 'audio/wav'
+        //     };
+
+        //     return new Promise((resolve, reject) => {
+        //         axios.post(url, data, {
+        //                 headers
+        //             })
+        //             .then(response => {
+        //                 let intent = response.data.result.prediction.intents[0].category;
+        //                 resolve(intent)
+        //             })
+        //             .catch(error => {
+        //                 console.error(error);
+        //                 reject(error)
+        //             });
+        //     })
+        // }
         const chatboxElement = document.querySelector('.chat-body');
         const userInputElement = document.querySelector('.chat-input');
+        const sendIcon = document.getElementById('send-icon');
+       getSpeechText();
 
-        userInputElement.addEventListener('keydown', function (event) {
+       sendIcon.addEventListener('click', async function (event) {
+        const userMessage = userInputElement.value;
+                addMessage(userMessage, 'user-message');
+                userInputElement.value = '';
+                getIntents(userMessage).
+                then(async res => {
+                    if (res === 'not_related_to_darulhuda') {
+                        let message =
+                            "To answer this question is beyond my ability.please visit https://www.dhiu.in/";
+                        addMessage(message, 'bot-message');
+                    } else {
+                        // Simulate bot response (replace with your own logic to retrieve the answer)
+                        await getChat(userMessage);
+                    }
+                });
+        });
+
+        userInputElement.addEventListener('keydown', async function (event) {
             if (event.key === 'Enter') {
                 const userMessage = userInputElement.value;
                 addMessage(userMessage, 'user-message');
                 userInputElement.value = '';
-
-                // Simulate bot response (replace with your own logic to retrieve the answer)
-                getChat(userMessage);
+                getIntents(userMessage).
+                then(async res => {
+                    if (res === 'not_related_to_darulhuda') {
+                        let message =
+                            "To answer this question is beyond my ability.please visit https://www.dhiu.in/";
+                        addMessage(message, 'bot-message');
+                    } else {
+                        // Simulate bot response (replace with your own logic to retrieve the answer)
+                        await getChat(userMessage);
+                    }
+                });
             }
         });
 
@@ -813,13 +943,15 @@
             chatboxElement.scrollTop = chatboxElement.scrollHeight;
         }
 
-        function requestFunction(url, data, subscriptionKey,projectName,apiVersion,deploymentName) {
-            axios.post(`${url}?projectName=${projectName}&api-version=${apiVersion}&deploymentName=${deploymentName}`, data, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Ocp-Apim-Subscription-Key': subscriptionKey
-                    }
-                })
+        async function requestFunction(url, data, subscriptionKey, projectName, apiVersion, deploymentName) {
+            axios.post(
+                    `${url}?projectName=${projectName}&api-version=${apiVersion}&deploymentName=${deploymentName}`,
+                    data, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Ocp-Apim-Subscription-Key': subscriptionKey
+                        }
+                    })
                 .then(response => {
                     console.log(response.data.answers);
                     let answer = response.data.answers[0].answer;
@@ -828,6 +960,38 @@
                 .catch(error => {
                     console.error(error);
                 });
+        }
+       function getSpeechText() {
+         // Check if the browser supports the Web Speech API
+         if ('webkitSpeechRecognition' in window) {
+            const recognition = new webkitSpeechRecognition();
+
+            // Configure recognition settings
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US'; // Set the language for speech recognition
+
+            const voiceSearchButton = document.getElementById('voice-search-button');
+
+            // Add an event listener to the voice search button
+            voiceSearchButton.addEventListener('click', function () {
+                recognition.start();
+            });
+
+            // Handle speech recognition results
+            recognition.onresult = function (event) {
+                const transcript = event.results[0][0].transcript;
+                userInputElement.value = transcript;
+                recognition.stop();
+            };
+
+            // Handle speech recognition errors
+            recognition.onerror = function (event) {
+                console.error('Speech recognition error:', event.error);
+            };
+        } else {
+            console.error('Web Speech API is not supported in this browser.');
+        }
         }
     </script>
     <script src="js/jquery-1.11.2.min.js"></script>
