@@ -256,7 +256,7 @@
             getIntents(userMessage).
             then(async res => {
                 console.log(res,'response inted');
-                if (res === 'not_related_to_darulhuda') {
+                if (res === 'Not-related-to-UniversityOfLincoln') {
                     let message =
                         "To answer this question is beyond my ability.please visit https://www.lincoln.ac.uk";
                     addMessage(message, 'bot-message');
@@ -297,8 +297,10 @@
                     if(answer === 'No answer found WILL SORT IT LATER') {
                         let algorithm = lstm ? 'LSTM':null
                         getMlResponse(question,algorithm)
+                    } else {
+                        addMessage(answer, 'bot-message');
                     }
-                    addMessage(answer, 'bot-message');
+                    
                 })
                 .catch(error => {
                     console.error(error);
