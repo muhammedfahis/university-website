@@ -23,20 +23,17 @@
         <div class="chat-container LSTM-container">
             <div class="chat-header">
                 <span> Chat Box LSTM</span>
-                <img id="closeButton-LSTM" src="./img/icons8-close-window-64.png"  alt="">
-                <img id="minimizeButton-LSTM" src="./img/icons8-compress-48.png"  alt="">
+                <img id="closeButton-LSTM" src="./img/icons8-close-window-64.png" alt="">
+                <img id="minimizeButton-LSTM" src="./img/icons8-compress-48.png" alt="">
             </div>
             <div class="chat-body" id="chat-body">
 
             </div>
             <div class="chat-footer" id="footer-LSTM">
-                <grammarly-editor-plugin 
-                
-                >
-                    <input class="chat-input" id="chat-input" type="text" placeholder="Type your message"
-                      />
-                  </grammarly-editor-plugin>
-               
+                <grammarly-editor-plugin>
+                    <input class="chat-input" id="chat-input" type="text" placeholder="Type your message" />
+                </grammarly-editor-plugin>
+
                 <div class="img-div">
                     <img src="./img/icons8-send-message-90.png" id="send-icon" style="height:20px" alt="">
                 </div>
@@ -47,8 +44,8 @@
         <div class="chat-container NAIVE-container" style="margin-left: 1%;">
             <div class="chat-header">
                 <span>Chat Box Naïve bayes</span>
-                <img id="closeButton-NAIVE" src="./img/icons8-close-window-64.png"  alt="">
-                <img id="minimizeButton-NAIVE" src="./img/icons8-compress-48.png"  alt="">
+                <img id="closeButton-NAIVE" src="./img/icons8-close-window-64.png" alt="">
+                <img id="minimizeButton-NAIVE" src="./img/icons8-compress-48.png" alt="">
             </div>
             <div class="chat-body-1" id="chat-body-1">
 
@@ -56,9 +53,9 @@
             <div class="chat-footer" id="footer-naive">
                 <grammarly-editor-plugin>
                     <input class="chat-input-1" id="chat-input-1" type="text" placeholder="Type your message"
-                 spellcheck="true" autocorrect="on" />
-                  </grammarly-editor-plugin>
-                
+                        spellcheck="true" autocorrect="on" />
+                </grammarly-editor-plugin>
+
                 <div class="img-div">
                     <img src="./img/icons8-send-message-90.png" id="send-icon-1" style="height:20px" alt="">
                 </div>
@@ -74,9 +71,9 @@
     <!-- <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
     <script src="https://cdn.tiny.cloud/1/r49rcj4uxmtj9e4upy2672lxxrbmy5a0e76s9xwda01tpsw0/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/@grammarly/editor-sdk?clientId=client_ACCZJfvJuhUtY5xy46XZbJ"></script>
+    <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.8/dist/linkify.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-
         let lstm = false;
         let question = '';
         const NaiveContainer = document.querySelector('.NAIVE-container');
@@ -94,57 +91,58 @@
         const footerNaive = document.getElementById('footer-naive');
         const footerLSTM = document.getElementById('footer-LSTM');
         const closeButtons = {
-            closeLSTM:false,
-            closeNAIVE:false
+            closeLSTM: false,
+            closeNAIVE: false
         }
-            // Attach a click event to the close button
-    closeButtonLSTM.addEventListener('click', (event) => {
-        colseAndMinimize(event, 'closeLSTM'); // Call your function here
-    });
+        // Attach a click event to the close button
+        closeButtonLSTM.addEventListener('click', (event) => {
+            colseAndMinimize(event, 'closeLSTM'); // Call your function here
+        });
 
-    // Attach a click event to the minimize button
-    minimizeButtonLSTM.addEventListener('click', (event) => {
-        colseAndMinimize(event, 'closeLSTM'); // Call your function here
-    });
-                // Attach a click event to the close button
-    closeButtonNAIVE.addEventListener('click', (event) => {
-        colseAndMinimize(event, 'closeNAIVE'); // Call your function here
-    });
+        // Attach a click event to the minimize button
+        minimizeButtonLSTM.addEventListener('click', (event) => {
+            colseAndMinimize(event, 'closeLSTM'); // Call your function here
+        });
+        // Attach a click event to the close button
+        closeButtonNAIVE.addEventListener('click', (event) => {
+            colseAndMinimize(event, 'closeNAIVE'); // Call your function here
+        });
 
-    // Attach a click event to the minimize button
-    minimizeButtonNAIVE.addEventListener('click', (event) => {
-        colseAndMinimize(event, 'closeNAIVE'); // Call your function here
-    });
-        function colseAndMinimize(event,button) {
+        // Attach a click event to the minimize button
+        minimizeButtonNAIVE.addEventListener('click', (event) => {
+            colseAndMinimize(event, 'closeNAIVE'); // Call your function here
+        });
+
+        function colseAndMinimize(event, button) {
             closeButtons[button] = !closeButtons[button];
-            if(closeButtons[button] && button === 'closeNAIVE') {
+            if (closeButtons[button] && button === 'closeNAIVE') {
                 console.log('insie');
                 closeButtonNAIVE.style.display = 'none';
                 minimizeButtonNAIVE.style.display = 'inline';
                 footerNaive.style.display = 'none';
                 chatboxElement1.style.display = 'none';
-                NaiveContainer.style.height='40px'
+                NaiveContainer.style.height = '40px'
             }
-            if(!closeButtons[button] && button === 'closeNAIVE') {
+            if (!closeButtons[button] && button === 'closeNAIVE') {
                 closeButtonNAIVE.style.display = 'inline';
                 minimizeButtonNAIVE.style.display = 'none';
                 footerNaive.style.display = 'flex';
                 chatboxElement1.style.display = 'block';
-                NaiveContainer.style.height='400px'
+                NaiveContainer.style.height = '400px'
             }
-            if(closeButtons[button] && button === 'closeLSTM') {
+            if (closeButtons[button] && button === 'closeLSTM') {
                 closeButtonLSTM.style.display = 'none';
                 minimizeButtonLSTM.style.display = 'inline';
                 footerLSTM.style.display = 'none';
                 chatboxElement.style.display = 'none';
-                LSTMContainer.style.height='40px'
+                LSTMContainer.style.height = '40px'
             }
-            if(!closeButtons[button] && button === 'closeLSTM') {
+            if (!closeButtons[button] && button === 'closeLSTM') {
                 closeButtonLSTM.style.display = 'inline';
                 minimizeButtonLSTM.style.display = 'none';
                 footerLSTM.style.display = 'flex';
                 chatboxElement.style.display = 'block';
-                LSTMContainer.style.height='400px'
+                LSTMContainer.style.height = '400px'
             }
         }
         async function getChat(message) {
@@ -293,7 +291,7 @@
                 else userInputElement.value = '';
                 getIntents(userMessage).
                 then(async res => {
-                    console.log(res,'response');
+                    console.log(res, 'response');
                     if (res === 'Not-related-to-UniversityOfLincoln') {
                         let message =
                             "To answer this question is beyond my ability.please visit https://www.lincoln.ac.uk";
@@ -321,7 +319,7 @@
             else userInputElement.value = '';
             getIntents(userMessage).
             then(async res => {
-                console.log(res,'response inted');
+                console.log(res, 'response inted');
                 if (res === 'Not-related-to-UniversityOfLincoln') {
                     let message =
                         "To answer this question is beyond my ability.please visit https://www.lincoln.ac.uk";
@@ -333,9 +331,15 @@
             });
         }
 
+        function convertUrlsToLinks(message) {
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            const replacedText = message.replace(urlRegex, '<a href="$&" target="_blank">$&</a>');
+            return replacedText;
+        }
+
         function addMessage(message, className) {
             const messageElement = document.createElement('div');
-            messageElement.textContent = message;
+            messageElement.innerHTML = convertUrlsToLinks(message);
             messageElement.classList.add('message', className);
             if (!lstm) {
                 chatboxElement1.appendChild(messageElement);
@@ -360,23 +364,23 @@
                 .then(response => {
                     console.log(response.data.answers);
                     let answer = response.data.answers[0].answer;
-                    if(answer === 'No answer found WILL SORT IT LATER') {
-                        let algorithm = lstm ? 'LSTM':null
-                        getMlResponse(question,algorithm)
+                    if (answer === 'No answer found WILL SORT IT LATER') {
+                        let algorithm = lstm ? 'LSTM' : null
+                        getMlResponse(question, algorithm)
                     } else {
                         addMessage(answer, 'bot-message');
                     }
-                    
+
                 })
                 .catch(error => {
                     console.error(error);
                 });
         }
 
-        function getMlResponse(question,algorithm) {
+        function getMlResponse(question, algorithm) {
             axios.get(
                     `http://0.0.0.0:8080/answer?question=${question}&algorithm=${algorithm}`,
-                   )
+                )
                 .then(data => {
                     console.log(data.response);
                     let answer = data.response;
@@ -386,7 +390,7 @@
                     console.error(error);
                 });
         }
-  
+
         function getSpeechText() {
             // Check if the browser supports the Web Speech API
             isLSTM = false;
@@ -443,7 +447,7 @@
             }
         }
     </script>
-    
+
 </body>
 
 <!-- Mirrored from www.ansonika.com/atena/horizontal_nav/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 22 Jun 2023 09:32:04 GMT -->
