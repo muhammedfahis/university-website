@@ -20,14 +20,16 @@
 
     <!-- Chat box markup -->
     <div class="container">
-        <div class="chat-container">
+        <div class="chat-container LSTM-container">
             <div class="chat-header">
-                Chat Box LSTM
+                <span> Chat Box LSTM</span>
+                <img id="closeButton-LSTM" src="./img/icons8-close-window-64.png"  alt="">
+                <img id="minimizeButton-LSTM" src="./img/icons8-compress-48.png"  alt="">
             </div>
             <div class="chat-body" id="chat-body">
 
             </div>
-            <div class="chat-footer">
+            <div class="chat-footer" id="footer-LSTM">
                 <grammarly-editor-plugin 
                 
                 >
@@ -42,14 +44,16 @@
                         alt=""></button>
             </div>
         </div>
-        <div class="chat-container" style="margin-left: 1%;">
+        <div class="chat-container NAIVE-container" style="margin-left: 1%;">
             <div class="chat-header">
-                Chat Box Naïve bayes
+                <span>Chat Box Naïve bayes</span>
+                <img id="closeButton-NAIVE" src="./img/icons8-close-window-64.png"  alt="">
+                <img id="minimizeButton-NAIVE" src="./img/icons8-compress-48.png"  alt="">
             </div>
             <div class="chat-body-1" id="chat-body-1">
 
             </div>
-            <div class="chat-footer">
+            <div class="chat-footer" id="footer-naive">
                 <grammarly-editor-plugin>
                     <input class="chat-input-1" id="chat-input-1" type="text" placeholder="Type your message"
                  spellcheck="true" autocorrect="on" />
@@ -75,12 +79,74 @@
 
         let lstm = false;
         let question = '';
+        const NaiveContainer = document.querySelector('.NAIVE-container');
+        const LSTMContainer = document.querySelector('.LSTM-container');
         const chatboxElement = document.querySelector('#chat-body');
         const chatboxElement1 = document.querySelector('#chat-body-1');
         const userInputElement = document.querySelector('#chat-input');
         const userInputElement1 = document.querySelector('#chat-input-1');
+        const closeButtonNAIVE = document.getElementById('closeButton-NAIVE');
+        const minimizeButtonNAIVE = document.getElementById('minimizeButton-NAIVE');
+        const closeButtonLSTM = document.getElementById('closeButton-LSTM');
+        const minimizeButtonLSTM = document.getElementById('minimizeButton-LSTM');
         const sendIcon = document.querySelector('#send-icon');
         const sendIcon1 = document.querySelector('#send-icon-1');
+        const footerNaive = document.getElementById('footer-naive');
+        const footerLSTM = document.getElementById('footer-LSTM');
+        const closeButtons = {
+            closeLSTM:false,
+            closeNAIVE:false
+        }
+            // Attach a click event to the close button
+    closeButtonLSTM.addEventListener('click', (event) => {
+        colseAndMinimize(event, 'closeLSTM'); // Call your function here
+    });
+
+    // Attach a click event to the minimize button
+    minimizeButtonLSTM.addEventListener('click', (event) => {
+        colseAndMinimize(event, 'closeLSTM'); // Call your function here
+    });
+                // Attach a click event to the close button
+    closeButtonNAIVE.addEventListener('click', (event) => {
+        colseAndMinimize(event, 'closeNAIVE'); // Call your function here
+    });
+
+    // Attach a click event to the minimize button
+    minimizeButtonNAIVE.addEventListener('click', (event) => {
+        colseAndMinimize(event, 'closeNAIVE'); // Call your function here
+    });
+        function colseAndMinimize(event,button) {
+            closeButtons[button] = !closeButtons[button];
+            if(closeButtons[button] && button === 'closeNAIVE') {
+                console.log('insie');
+                closeButtonNAIVE.style.display = 'none';
+                minimizeButtonNAIVE.style.display = 'inline';
+                footerNaive.style.display = 'none';
+                chatboxElement1.style.display = 'none';
+                NaiveContainer.style.height='40px'
+            }
+            if(!closeButtons[button] && button === 'closeNAIVE') {
+                closeButtonNAIVE.style.display = 'inline';
+                minimizeButtonNAIVE.style.display = 'none';
+                footerNaive.style.display = 'flex';
+                chatboxElement1.style.display = 'block';
+                NaiveContainer.style.height='400px'
+            }
+            if(closeButtons[button] && button === 'closeLSTM') {
+                closeButtonLSTM.style.display = 'none';
+                minimizeButtonLSTM.style.display = 'inline';
+                footerLSTM.style.display = 'none';
+                chatboxElement.style.display = 'none';
+                LSTMContainer.style.height='40px'
+            }
+            if(!closeButtons[button] && button === 'closeLSTM') {
+                closeButtonLSTM.style.display = 'inline';
+                minimizeButtonLSTM.style.display = 'none';
+                footerLSTM.style.display = 'flex';
+                chatboxElement.style.display = 'block';
+                LSTMContainer.style.height='400px'
+            }
+        }
         async function getChat(message) {
             try {
                 let answer;

@@ -492,6 +492,7 @@
     padding: 10px;
     height: 300px;
     overflow-y: scroll;
+    overflow-wrap: anywhere;
   }
   
   .chat-message {
@@ -580,4 +581,25 @@
     right: 0;
     position: absolute;
     justify-content: end;
+  }
+  #minimizeButton-NAIVE,#minimizeButton-LSTM {
+    display: none;
+  }
+  .chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .chat-header img {
+    width: 25px;
+  }
+  .LSTM-container {
+    position: absolute;
+    right: 33%;
+    bottom: 0;
+  }
+  .NAIVE-container {
+    position: absolute;
+    right: 0;
+    bottom: 0;
   }
